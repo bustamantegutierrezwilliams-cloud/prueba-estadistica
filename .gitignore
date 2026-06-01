@@ -1,0 +1,20 @@
+# entorno virtual
+venv/
+.venv/
+env/
+
+# ignorar archivos temporales de python
+__pycache__/
+*.pyc 
+*.pyo 
+.pytest_cache/
+
+# datasets pesados (evitar subir datos masivos)
+*.csv
+*.xlxs
+*.parquet
+
+# ignorar configuraciones locales del sistema o de VS code
+.VScode/
+-DS_Store
+Thumbs.db
