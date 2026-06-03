@@ -1,58 +1,46 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
-# Datos de edades válidas
-edades = [18,19,19,19,23,22,18,18,18,18,
-          18,19,18,19,18,20,20,20,20,21,
-          32,19,21,24,19,19,30]
+# Leer archivo Excel
+archivo = "encuesta.xlsx"
 
-# Datos de género
-genero = [
-"Masculino","Masculino","Masculino","Masculino","Masculino",
-"Masculino","Masculino","Masculino","Prefiero no decirlo",
-"Masculino","Masculino","Masculino","Femenino","Masculino",
-"Masculino","Masculino","Masculino","Masculino","Masculino",
-"Femenino","Prefiero no decirlo","Femenino","Masculino",
-"Femenino","Masculino","Masculino","Masculino","Masculino",
-"Femenino"
-]
+df = pd.read_excel(archivo)
 
-# Tabla de edades
-tabla_edades = pd.Series(edades).value_counts().sort_index()
+# Crear carpeta para gráficos
+os.makedirs("graficos", exist_ok=True)
 
-print("TABLA DE FRECUENCIAS DE EDAD")
-print(tabla_edades)
+print("=== RESUMEN DEL DATASET ===")
+print("Número de encuestados:", len(df))
+print()
 
-# Tabla de género
-tabla_genero = pd.Series(genero).value_counts()
+# Analizar todas las columnas excepto la marca temporal
+for columna in df.columns[1:]:
 
-print("\nTABLA DE FRECUENCIAS DE GÉNERO")
-print(tabla_genero)
+    print("\n" + "="*80)
+    print(columna)
 
-# Gráfico de barras
-plt.figure(figsize=(6,4))
-tabla_genero.plot(kind='bar')
-plt.title("Distribución por Género")
-plt.xlabel("Género")
-plt.ylabel("Frecuencia")
-plt.tight_layout()
-plt.savefig("grafico_genero.png")
+    frecuencias = df[columna].value_counts(dropna=False)
 
-# Histograma de edades
-plt.figure(figsize=(6,4))
-plt.hist(edades, bins=6)
-plt.title("Histograma de Edades")
-plt.xlabel("Edad")
-plt.ylabel("Frecuencia")
-plt.tight_layout()
-plt.savefig("histograma_edades.png")
+    print(frecuencias)
 
-# Gráfico de torta
-plt.figure(figsize=(6,6))
-tabla_genero.plot(kind='pie', autopct='%1.1f%%')
-plt.ylabel("")
-plt.title("Distribución por Género")
-plt.tight_layout()
-plt.savefig("torta_genero.png")
+    plt.figure(figsize=(8,5))
+    frecuencias.plot(kind="bar")
 
-print("\nGráficos generados correctamente.")
+    plt.title(columna)
+    plt.ylabel("Frecuencia")
+    plt.tight_layout()
+
+    nombre_archivo = (
+        columna[:25]
+        .replace("/", "-")
+        .replace("?", "")
+        .replace(":", "")
+        + ".png"
+    )
+
+    plt.savefig(f"graficos/{nombre_archivo}")
+    plt.close()
+
+print("\nAnálisis completado.")
+print("Los gráficos fueron guardados en la carpeta 'graficos'.")

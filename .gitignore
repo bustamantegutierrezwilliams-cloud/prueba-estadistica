@@ -15,6 +15,6 @@ __pycache__/
 *.parquet
 
 # ignorar configuraciones locales del sistema o de VS code
-.VScode/
+.code/
 -DS_Store
 Thumbs.db
